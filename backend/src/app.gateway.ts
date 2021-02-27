@@ -11,12 +11,12 @@ import { Server, Socket } from 'socket.io'
 import { UsersService } from './modules/users/users.service'
 import { User } from './modules/users/interfaces/user.interface'
 import { CreateUserDto } from './modules/users/dto/create-user.dto'
+import OutputUserDto from './modules/users/dto/output-user.dto'
 
 const sessionsMap = {}
 
 @WebSocketGateway()
-export class AppGateway
-    implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection {
+export class AppGateway implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection {
     constructor(private readonly userService: UsersService) {}
     @WebSocketServer()
     server: Server
@@ -29,7 +29,6 @@ export class AppGateway
 
     handleConnection(client: Socket): void {
         this.logger.log('New connection! id: ' + client.id)
-        client.emit('ASK_JWT')
     }
 
     @SubscribeMessage('JWT_RECEIVED')
@@ -41,21 +40,19 @@ export class AppGateway
                 sessionsMap[client.id] = user._id
                 this.logger.log(`User login: ${user.username} ${user._id}`)
             }
+            return user as OutputUserDto
         } catch (err) {
             this.logger.error(err.message)
         }
     }
 
     @SubscribeMessage('JWT_FAILED')
-    async handleSignUp(
-        client: Socket,
-        payload: CreateUserDto,
-    ): Promise<string> {
+    async handleSignUp(client: Socket, payload: CreateUserDto): Promise<string> {
         try {
-            const data = await this.userService.signUp(payload)
-            sessionsMap[client.id] = data.user._id
-
-            return data.token
+            const {user, token} = await this.userService.signUp(payload)
+            sessionsMap[client.id] = user._id
+            this.logger.log(`New user created: ${user.username} ${user._id}`)
+            return token
         } catch (err) {
             this.logger.error(err.message)
         }
@@ -63,9 +60,11 @@ export class AppGateway
 
     handleDisconnect(client: Socket): void {
         try {
-            this.userService.logout(sessionsMap[client.id])
-            this.logger.log(`Client ${sessionsMap[client.id]} was disconnected`)
-            delete sessionsMap[client.id]
+            if (sessionsMap[client.id]) {
+                this.userService.logout(sessionsMap[client.id])
+                this.logger.log(`Client ${sessionsMap[client.id]} was disconnected`)
+                delete sessionsMap[client.id]
+            }
         } catch (err) {
             this.logger.error(err.message)
         }

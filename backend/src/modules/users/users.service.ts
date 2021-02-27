@@ -1,5 +1,5 @@
 import { Model } from 'mongoose'
-import jwt from 'jsonwebtoken'
+import { sign, verify } from 'jsonwebtoken'
 import { Injectable, Inject } from '@nestjs/common'
 import { User } from './interfaces/user.interface'
 import { USER_MODEL } from '../../core/constants'
@@ -20,7 +20,7 @@ export class UsersService {
     }
 
     async login(token: string, connectionId: string): Promise<User> {
-        const decoded: any = jwt.verify(token, process.env.ACCESS_SECRET)
+        const decoded: any = verify(token, process.env.TOKEN_SECRET)
         const userId: string = decoded._id
 
         const matched: User = await this.findById(userId)
@@ -35,14 +35,13 @@ export class UsersService {
         const user: User = await this.findById(userId)
         user.isOnline = false
         user.lastSeen = new Date()
+        await user.save()
     }
 
-    async signUp(
-        createUserDto: CreateUserDto,
-    ): Promise<{ user: User; token: string }> {
+    async signUp(createUserDto: CreateUserDto): Promise<{ user: User; token: string }> {
         const newUser = new this.userModel(createUserDto)
         const savedUser = await newUser.save()
-        const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET)
+        const token = sign({ _id: savedUser._id }, process.env.TOKEN_SECRET)
         return { user: savedUser, token }
     }
 
