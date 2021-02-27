@@ -8,15 +8,15 @@ import {
 } from '@nestjs/websockets'
 import { Logger } from '@nestjs/common'
 import { Server, Socket } from 'socket.io'
-import { UsersService } from './modules/users/users.service'
-import { User } from './modules/users/interfaces/user.interface'
-import { CreateUserDto } from './modules/users/dto/create-user.dto'
-import OutputUserDto from './modules/users/dto/output-user.dto'
+import { UsersService } from '../modules/users/users.service'
+import { User } from '../modules/users/interfaces/user.interface'
+import { CreateUserDto } from '../modules/users/dto/create-user.dto'
+import OutputUserDto from '../modules/users/dto/output-user.dto'
 
 const sessionsMap = {}
 
 @WebSocketGateway()
-export class AppGateway implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection {
+export class AuthGateway implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection {
     constructor(private readonly userService: UsersService) {}
     @WebSocketServer()
     server: Server
@@ -39,6 +39,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayDisconnect, OnGateway
             if (token) {
                 sessionsMap[client.id] = user._id
                 this.logger.log(`User login: ${user.username} ${user._id}`)
+                client.broadcast.emit('CONTACT_LOGIN', { user: user as OutputUserDto })
             }
             return user as OutputUserDto
         } catch (err) {
@@ -58,10 +59,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayDisconnect, OnGateway
         }
     }
 
-    handleDisconnect(client: Socket): void {
+    async handleDisconnect(client: Socket): Promise<void> {
         try {
             if (sessionsMap[client.id]) {
-                this.userService.logout(sessionsMap[client.id])
+                const user = await this.userService.logout(sessionsMap[client.id])
+                client.broadcast.emit('CONTACT_LOGOUT', { user: user as OutputUserDto })
                 this.logger.log(`Client ${sessionsMap[client.id]} was disconnected`)
                 delete sessionsMap[client.id]
             }

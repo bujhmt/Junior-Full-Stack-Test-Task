@@ -3,9 +3,10 @@ import { ConfigModule } from '@nestjs/config'
 import { DatabaseModule } from './core/database/database.module'
 import { UsersModule } from './modules/users/users.module'
 import { AppService } from './app.service'
-import { AppGateway } from './app.gateway'
+import { AuthGateway } from './app-gateways/auth.gateway'
 import { MessagesModule } from './modules/messages/messages.module'
 import { ChatsModule } from './modules/chats/chats.module'
+import { ContactsGateway } from './app-gateways/contacts.gateway'
 
 @Module({
     imports: [
@@ -17,6 +18,6 @@ import { ChatsModule } from './modules/chats/chats.module'
         MessagesModule,
         ChatsModule,
     ],
-    providers: [AppService, AppGateway],
+    providers: [AppService, AuthGateway, ContactsGateway],
 })
 export class AppModule {}

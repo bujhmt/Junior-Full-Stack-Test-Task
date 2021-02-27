@@ -1,28 +1,35 @@
 <template>
     <div class="home">
-        <img alt="Vue logo" src="../assets/logo.png" />
-        <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+        <ContactsList />
+        <SearchInput/>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { IUser } from '@/interfaces/user'
+import ContactsList from '@/components/ContactsList.vue' // @ is an alias to /src
+import IUser from '@/interfaces/user'
 import { namespace } from 'vuex-class'
 import { first } from 'random-name'
+import IContact from '@/interfaces/contact'
+import SearchInput from '@/components/SearchInput.vue'
 
 const Auth = namespace('Auth')
+const Contacts = namespace('Contacts')
 const storageName = process.env.VUE_APP_STORAGE_NAME || 'token'
 
 @Component({
     components: {
-        HelloWorld,
+        ContactsList,
+        SearchInput
     },
 })
 export default class Index extends Vue {
     @Auth.Action
     public setUser!: (user: IUser) => void
+
+    @Contacts.Action
+    public setContacts!: (_contacts: IContact[]) => void
 
     public getLocalStorageData() {
         return JSON.parse(String(localStorage.getItem(storageName)))
@@ -39,6 +46,10 @@ export default class Index extends Vue {
             if (user) {
                 this.setUser(user)
             }
+
+            this.$socket.emit('GET_CONTACTS', { userId: user._id }, (contacts: IContact[]) => {
+                if (contacts) this.setContacts(contacts)
+            })
         })
     }
 

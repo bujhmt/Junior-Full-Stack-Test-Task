@@ -1,5 +1,5 @@
 import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators'
-import { IUser } from '@/interfaces/user'
+import IUser from '@/interfaces/user'
 
 @Module({ namespaced: true })
 export default class Auth extends VuexModule {

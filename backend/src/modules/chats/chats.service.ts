@@ -17,12 +17,6 @@ export class ChatsService {
             .populate({ path: 'User', match: { _id: userId } })
             .populate({ path: 'Message', limit: 1, options: { sort: { sent: -1 } } })
             .exec()
-        console.log(chats)
         return chats
     }
-
-    // async createChat({users} : CreateChatDto): Promise<Chat> {
-    //     const newChat = new this.chatModel()
-    //     newChat.users.push()
-    // }
 }

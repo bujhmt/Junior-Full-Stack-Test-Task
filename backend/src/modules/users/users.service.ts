@@ -31,11 +31,11 @@ export class UsersService {
         return await matched.save()
     }
 
-    async logout(userId: string): Promise<void> {
+    async logout(userId: string): Promise<User> {
         const user: User = await this.findById(userId)
         user.isOnline = false
         user.lastSeen = new Date()
-        await user.save()
+        return await user.save()
     }
 
     async signUp(createUserDto: CreateUserDto): Promise<{ user: User; token: string }> {
@@ -47,5 +47,10 @@ export class UsersService {
 
     async update(userId: string, updateUserDto: UpdateUserDto): Promise<void> {
         await this.userModel.updateOne({ _id: userId }, updateUserDto).exec()
+    }
+
+    async getAllWithoutOwn(userId: string): Promise<User[]> {
+        const candidates = await this.userModel.find({}).sort({ isOnline: 1, lastSeen: -1})
+        return candidates.filter((candidate) => candidate._id != userId)
     }
 }

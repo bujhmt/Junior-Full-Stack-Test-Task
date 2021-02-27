@@ -7,5 +7,5 @@ export interface Message extends Document {
     sent: Date
     owner: User
     chat: Chat
-    isRead: Boolean
+    isRead: boolean
 }
