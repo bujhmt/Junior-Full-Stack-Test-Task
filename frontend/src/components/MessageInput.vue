@@ -1,0 +1,50 @@
+<template>
+    <div>
+        <input
+            v-model="input"
+            placeholder="Type here..."
+            @keypress.enter.prevent="handleInput"
+        >
+    </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import IUser from '@/interfaces/user'
+import IChat from '@/interfaces/chat'
+import IMessage from '@/interfaces/message'
+
+const Auth = namespace('Auth')
+const Chat = namespace('Chat')
+
+@Component
+export default class MessageInput extends Vue {
+    public input: string = ''
+
+    @Auth.Getter
+    public user!: IUser
+
+    @Chat.State
+    public openedChat!: IChat
+
+    @Chat.Action
+    public pushMessage!: (message: IMessage) => void
+
+    public handleInput() {
+        if (this.input.trim().length > 0) {
+            this.$socket.emit('NEW_MESSAGE',
+                { owner: this.user, addressee: this.openedChat.user, text: this.input },
+                (message: IMessage) => {
+                    this.pushMessage(message)
+                })
+            this.input = ''
+        }
+    }
+
+}
+</script>
+
+<style scoped>
+
+</style>

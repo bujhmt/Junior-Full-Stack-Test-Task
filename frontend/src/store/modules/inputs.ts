@@ -3,7 +3,6 @@ import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators'
 @Module({ namespaced: true })
 export default class Inputs extends VuexModule {
     public searchInput: string = ''
-    public messageInput: string = ''
 
     @Mutation
     public _setSearchInput(value: string): void {

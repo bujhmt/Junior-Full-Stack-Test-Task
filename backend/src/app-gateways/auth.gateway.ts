@@ -1,7 +1,6 @@
 import {
     WebSocketGateway,
     OnGatewayInit,
-    WebSocketServer,
     OnGatewayConnection,
     OnGatewayDisconnect,
     SubscribeMessage,
@@ -18,8 +17,6 @@ const sessionsMap = {}
 @WebSocketGateway()
 export class AuthGateway implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection {
     constructor(private readonly userService: UsersService) {}
-    @WebSocketServer()
-    server: Server
 
     private logger: Logger = new Logger('AppGateway')
 

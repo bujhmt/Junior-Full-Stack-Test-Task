@@ -1,27 +1,40 @@
 <template>
-    <div class="home">
-        <ContactsList />
-        <SearchInput/>
+    <div class="main">
+        <div>
+            <ContactsList />
+            <SearchInput />
+        </div>
+        <div>
+            <Chat v-if="isChatOpen"/>
+            <h1 v-else>Hi!</h1>
+            <MessageInput/>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import ContactsList from '@/components/ContactsList.vue' // @ is an alias to /src
+import ContactsList from '@/components/ContactsList.vue'
 import IUser from '@/interfaces/user'
 import { namespace } from 'vuex-class'
 import { first } from 'random-name'
 import IContact from '@/interfaces/contact'
 import SearchInput from '@/components/SearchInput.vue'
+import MessageInput from '@/components/MessageInput.vue'
+import IChat from '@/interfaces/chat'
+import ChatModule from '@/components/ChatModule.vue'
 
 const Auth = namespace('Auth')
 const Contacts = namespace('Contacts')
+const Chat = namespace('Chat')
 const storageName = process.env.VUE_APP_STORAGE_NAME || 'token'
 
 @Component({
     components: {
         ContactsList,
-        SearchInput
+        SearchInput,
+        MessageInput,
+        ChatModule
     },
 })
 export default class Index extends Vue {
@@ -30,6 +43,9 @@ export default class Index extends Vue {
 
     @Contacts.Action
     public setContacts!: (_contacts: IContact[]) => void
+
+    @Chat.Getter
+    public currentChat!: IChat
 
     public getLocalStorageData() {
         return JSON.parse(String(localStorage.getItem(storageName)))
@@ -53,6 +69,10 @@ export default class Index extends Vue {
         })
     }
 
+    get isChatOpen() {
+        return this.currentChat && this.currentChat.user
+    }
+
     mounted() {
         const data = this.getLocalStorageData()
         if (!data || !data.token) {                                                              // user don't have jwt token => signUp => login
@@ -66,3 +86,9 @@ export default class Index extends Vue {
     }
 }
 </script>
+
+<style scoped lang="scss">
+.main {
+    display: flex;
+}
+</style>

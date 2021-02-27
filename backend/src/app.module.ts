@@ -5,8 +5,8 @@ import { UsersModule } from './modules/users/users.module'
 import { AppService } from './app.service'
 import { AuthGateway } from './app-gateways/auth.gateway'
 import { MessagesModule } from './modules/messages/messages.module'
-import { ChatsModule } from './modules/chats/chats.module'
 import { ContactsGateway } from './app-gateways/contacts.gateway'
+import { MessagesGateway } from './app-gateways/messages.gateway'
 
 @Module({
     imports: [
@@ -16,8 +16,7 @@ import { ContactsGateway } from './app-gateways/contacts.gateway'
         DatabaseModule,
         UsersModule,
         MessagesModule,
-        ChatsModule,
     ],
-    providers: [AppService, AuthGateway, ContactsGateway],
+    providers: [AppService, AuthGateway, ContactsGateway, MessagesGateway],
 })
 export class AppModule {}

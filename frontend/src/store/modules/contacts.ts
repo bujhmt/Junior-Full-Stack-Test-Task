@@ -1,19 +1,19 @@
 import { VuexModule, Module, Mutation, Action } from 'vuex-module-decorators'
-import IChat from '@/interfaces/chat'
 import IContact from '@/interfaces/contact'
 import { Vue } from 'vue-property-decorator'
+import IMessage from '@/interfaces/message'
 
 @Module({ namespaced: true })
 export default class Contacts extends VuexModule {
     public contacts: IContact[] = []
-    public openedChat: IChat | undefined
 
     @Mutation
     public _setContacts(contacts: IContact[]): void {
         this.contacts = contacts
     }
 
-    @Mutation _addOrUpdateContact(contact: IContact): void {
+    @Mutation
+    public _addOrUpdateContact(contact: IContact): void {
         const matchedIdx = this.contacts.findIndex(_contact => _contact.user._id === contact.user._id)
         if (matchedIdx === -1) {
             this.contacts.unshift(contact)
@@ -22,8 +22,16 @@ export default class Contacts extends VuexModule {
         }
     }
 
-    @Mutation _openChat(chat: IChat): void {
-        this.openedChat = chat
+    @Mutation
+    _setLastMessage(message: IMessage): void {
+        const matchedIdx = this.contacts.findIndex(_contact => message.owner._id === _contact.user._id)
+        if (matchedIdx !== -1) {
+            Vue.set(this.contacts, matchedIdx, {
+                ...this.contacts[matchedIdx],
+                lastMsg: message,
+                unreadCount: this.contacts[matchedIdx].unreadCount! + 1
+            })
+        }
     }
 
     @Action({rawError: true})
@@ -37,11 +45,6 @@ export default class Contacts extends VuexModule {
     }
 
     @Action({rawError: true})
-    public openChat(chat: IChat): void {
-        this.context.commit('_openChat', chat)
-    }
-
-    @Action({rawError: true})
     public SOCKET_CONTACT_LOGIN(newContact: IContact) {
         this.context.commit('_addOrUpdateContact', newContact)
     }
@@ -49,5 +52,11 @@ export default class Contacts extends VuexModule {
     @Action({rawError: true})
     public SOCKET_CONTACT_LOGOUT(contact: IContact) {
         this.context.commit('_addOrUpdateContact', contact)
+    }
+
+    @Action({rawError: true})
+    public SOCKET_MESSAGE(message: IMessage): void {
+        console.log('MESSAGE contacts store', message)
+        this.context.commit('_setLastMessage', message)
     }
 }

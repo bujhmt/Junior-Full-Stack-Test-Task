@@ -13,7 +13,7 @@ export class UsersService {
         private userModel: Model<User>,
     ) {}
 
-    private async findById(userId: string): Promise<User> {
+    public async findById(userId: string): Promise<User> {
         const matched: User = await this.userModel.findOne({ _id: userId })
         if (!matched) throw new Error(`User with ${userId} id not found`)
         return matched
