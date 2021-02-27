@@ -1,2 +1,4 @@
 export const DATABASE_CONNECTION = 'DATABASE_CONNECTION'
 export const USER_MODEL = 'USER_MODEL'
+export const MESSAGE_MODEL = 'MESSAGE_MODEL'
+export const CHAT_MODEL = 'CHAT_MODEL'

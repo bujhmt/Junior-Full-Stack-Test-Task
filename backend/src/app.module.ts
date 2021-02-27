@@ -4,7 +4,8 @@ import { DatabaseModule } from './core/database/database.module'
 import { UsersModule } from './modules/users/users.module'
 import { AppService } from './app.service'
 import { AppGateway } from './app.gateway'
-import { UsersGateway } from './modules/users/users.gateway'
+import { MessagesModule } from './modules/messages/messages.module'
+import { ChatsModule } from './modules/chats/chats.module'
 
 @Module({
     imports: [
@@ -13,7 +14,9 @@ import { UsersGateway } from './modules/users/users.gateway'
         }),
         DatabaseModule,
         UsersModule,
+        MessagesModule,
+        ChatsModule,
     ],
-    providers: [AppService, AppGateway, UsersGateway],
+    providers: [AppService, AppGateway],
 })
 export class AppModule {}

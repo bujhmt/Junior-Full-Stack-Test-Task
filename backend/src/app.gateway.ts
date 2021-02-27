@@ -49,7 +49,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayDisconnect, OnGateway
     @SubscribeMessage('JWT_FAILED')
     async handleSignUp(client: Socket, payload: CreateUserDto): Promise<string> {
         try {
-            const {user, token} = await this.userService.signUp(payload)
+            const { user, token } = await this.userService.signUp(payload)
             sessionsMap[client.id] = user._id
             this.logger.log(`New user created: ${user.username} ${user._id}`)
             return token

@@ -18,7 +18,7 @@ const storageName = process.env.VUE_APP_STORAGE_NAME || 'token'
 @Component({
     components: {
         HelloWorld,
-    }
+    },
 })
 export default class Index extends Vue {
     @Auth.Action
@@ -35,7 +35,7 @@ export default class Index extends Vue {
     }
 
     public login(token: string) {
-        this.$socket.emit('JWT_RECEIVED', {token}, (user: IUser) => {
+        this.$socket.emit('JWT_RECEIVED', { token }, (user: IUser) => {
             if (user) {
                 this.setUser(user)
             }
