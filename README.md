@@ -17,11 +17,11 @@ Languages: [TypeScript](https://www.typescriptlang.org/), [JavaScript ES6](https
 
 Use the [npm](https://www.npmjs.com/get-npm) package manager to run commands:
 
-### How to start?
+## How to start?
 1) Set up MongoDB
 2) Create `.env` files in `frontend` and `backend` folders. Fill it like in `.env.sample`. Be careful, don't forget to put a link to mongo database as the `MONGO_URL` property in `.env`. 
 3) Run `npm install` and `npm install --only-dev` in `backend` and `frontend` folder
-### Dev
+## Dev
 Frontend:
 ```bash
 cd ./frontend
@@ -34,7 +34,7 @@ cd ./backend
 npm run dev
 ````
 
-### Build
+## Build
 Frontend:
 ```bash
 cd ./frontend
