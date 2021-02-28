@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="input-wrapper">
         <input
+            class="input"
             v-model="input"
             placeholder="Type here..."
             @keypress.enter.prevent="handleInput"
@@ -50,6 +51,14 @@ export default class MessageInput extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.input-wrapper {
+    width: 65%;
+    margin-right: 3%;
+}
+
+.input {
+    width: 100%;
+}
 
 </style>

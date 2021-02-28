@@ -1,27 +1,50 @@
 <template>
     <div
-        class="list-main"
+        class="list-main contacts-list-size"
     >
-        <ul class="contacts-wrapper">
-            <li
-                class="contact"
-                v-for="contact in handleSearch()"
-                :key="contact._id"
-                @click.prevent="handleChatOpen(contact.user)"
+        <div class="online-search">
+            <div
+                :class="IsOnlyOnline ? 'box box-active' : 'box box-disabled'"
+                @click="IsOnlyOnline = true"
             >
-                <div class="contact-info">
-                    <img :src="contact.user.imageUrl" alt="user ava" class="ava">
-                </div>
-                <div class="username-wrapper">
-                    <div class="username">
-                        {{ contact.user.username }}
+                Online
+            </div>
+            <div
+                :class="IsOnlyOnline ? 'box box-disabled' : 'box box-active'"
+                @click="IsOnlyOnline = false"
+            >
+                All
+            </div>
+        </div>
+        <div class="find-list-wrapper">
+            <ul class="contacts-wrapper">
+                <li
+                    class="contact"
+                    v-for="contact in handleSearch()"
+                    v-if="IsOnlyOnline ? contact.user.isOnline: true"
+                    :key="contact._id"
+                    @click.prevent="handleChatOpen(contact.user)"
+                >
+                    <div class="contact-info">
+                        <img
+                            :src="contact.user.imageUrl"
+                            alt="user ava"
+                            class="ava"
+                        >
+                        <div v-if="contact.user.isOnline" class="online-circle"/>
                     </div>
-                    <div class="last-msg" v-if="contact.lastMsg">
-                        {{ contact.lastMsg.text }}
+                    <div class="username-wrapper">
+                        <div class="username">
+                            {{ contact.user.username }}
+                        </div>
+                        <div class="last-msg" v-if="contact.lastMsg">
+                            {{ contact.lastMsg.text }}
+                        </div>
                     </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+            <SearchInput />
+        </div>
     </div>
 </template>
 
@@ -32,13 +55,17 @@ import IUser from '@/interfaces/user'
 import IContact from '@/interfaces/contact'
 import IMessage from '@/interfaces/message'
 import IChat from '@/interfaces/chat'
+import SearchInput from '@/components/SearchInput.vue'
 
 const Auth = namespace('Auth')
 const Contacts = namespace('Contacts')
 const Inputs = namespace('Inputs')
 const Chat = namespace('Chat')
-@Component
+@Component({
+    components: { SearchInput },
+})
 export default class ContactsList extends Vue {
+    public IsOnlyOnline = false
 
     @Inputs.State
     public searchInput!: string
@@ -70,6 +97,8 @@ export default class ContactsList extends Vue {
 
 .list-main {
     background: #ffffff;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .contacts-wrapper {
@@ -78,6 +107,7 @@ export default class ContactsList extends Vue {
     list-style-type: none;
     justify-content: flex-start;
     padding: 0;
+    margin: 0;
 }
 
 .contact {
@@ -85,14 +115,16 @@ export default class ContactsList extends Vue {
     width: 100%;
     display: flex;
     align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
 
     &:hover {
-        background: #d7e0e7;
+        background: #f8f8f8;
     }
 }
 
 .contact-info {
-    display: flex;
+    position: relative;
     margin: 0 5px 0 5px;
 }
 
@@ -102,11 +134,13 @@ export default class ContactsList extends Vue {
 }
 
 .username {
-    color: #000
+    color: #000;
+    margin-left: 15%;
 }
 
 .last-msg {
     color: #beccd9;
+    margin-left: 15%;
 }
 
 .username-wrapper {
@@ -115,4 +149,41 @@ export default class ContactsList extends Vue {
     justify-content: center;
 }
 
+.find-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 80px);
+}
+
+.online-search {
+    display: flex;
+}
+
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    color: #000;
+    height: 80px;
+}
+
+.box-active {
+    background: #fff;
+}
+
+.box-disabled {
+    background: #f8f8f8;
+}
+
+.online-circle {
+    border-radius: 50%;
+    background: #34F079;
+    min-width: 15px;
+    height: 15px;
+    position: absolute;
+    right: -5px;
+    bottom: 1px;
+}
 </style>

@@ -1,17 +1,13 @@
 <template>
     <div class="main">
-        <div class="chat">
-            <ChatModule/>
-        </div>
-        <div class="list">
-            <ContactsList />
-        </div>
-<!--            <SearchInput />-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            <ChatModule />-->
-<!--            <MessageInput/>-->
-<!--        </div>-->
+        <ChatModule />
+        <ContactsList />
+        <!--            <SearchInput />-->
+        <!--        </div>-->
+        <!--        <div>-->
+        <!--            <ChatModule />-->
+        <!--            <MessageInput/>-->
+        <!--        </div>-->
     </div>
 </template>
 
@@ -35,7 +31,7 @@ const storageName = process.env.VUE_APP_STORAGE_NAME || 'token'
         ContactsList,
         SearchInput,
         MessageInput,
-        ChatModule
+        ChatModule,
     },
 })
 export default class Index extends Vue {
@@ -84,9 +80,9 @@ export default class Index extends Vue {
 <style scoped lang="scss">
 .main {
     display: flex;
-    margin: 5% 10% 5% 10%;
-    min-height: 90%;
-    min-width: 80%;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3%;
 }
 
 .list {

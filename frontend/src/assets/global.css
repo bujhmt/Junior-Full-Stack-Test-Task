@@ -1,3 +1,13 @@
 body {
     background: #58666f;
 }
+
+.chat-size {
+    height: 800px;
+    width: 1000px;
+}
+
+.contacts-list-size {
+    height: 800px;
+    width: 300px;
+}
