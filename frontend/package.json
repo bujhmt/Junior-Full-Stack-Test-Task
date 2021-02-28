@@ -6,7 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "serve-prod": "npm install -g serve && serve -s dist",
+    "heroku-postbuild": "npm install && npm install --only-dev && npm run build",
+    "start": "npm run serve-prod"
   },
   "dependencies": {
     "core-js": "^3.6.5",
