@@ -37,12 +37,4 @@ export class MessagesService {
         if (b) return b
     }
 
-    public async getUnreadCount(owner: User, addressee: User): Promise<number> {
-        let count = 0
-        count += Number(await this.messageModel.find({ owner, addressee, isRead: false }).countDocuments())
-        count += Number(
-            await this.messageModel.find({ owner: addressee, addressee: owner, isRead: false }).countDocuments(),
-        )
-        return count
-    }
 }

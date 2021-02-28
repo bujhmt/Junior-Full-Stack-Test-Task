@@ -9,7 +9,6 @@ import { Message } from '../modules/messages/interfaces/message.interface'
 interface Contact {
     user: User
     lastMsg?: Message
-    unreadCount?: number
 }
 
 @WebSocketGateway()
@@ -28,7 +27,6 @@ export class ContactsGateway {
                     return {
                         user,
                         lastMsg: await this.messagesService.getLatest(owner, user),
-                        unreadCount: await this.messagesService.getUnreadCount(owner, user),
                     }
                 }),
             )

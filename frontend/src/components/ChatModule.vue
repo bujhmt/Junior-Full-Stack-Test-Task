@@ -81,10 +81,6 @@ export default class ChatModule extends Vue {
                     this.chat = state.Chat.openedChat
             }
         })
-
-        // const scroll = this.$el.querySelector('#scroll')
-        // if (scroll)
-        //     scroll.scrollIntoView({ behavior: 'smooth' })
     }
 
 }

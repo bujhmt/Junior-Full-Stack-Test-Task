@@ -6,4 +6,5 @@ export interface User extends Document {
     lastSeen: Date
     imageUrl: string
     currentConnectionId?: string
+    role?: string
 }

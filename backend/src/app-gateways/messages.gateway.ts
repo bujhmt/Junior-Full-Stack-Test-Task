@@ -20,9 +20,12 @@ export class MessagesGateway {
     async createMessage(client: Socket, createMessageDto: CreateMessageDto): Promise<OutputMessageDto> {
         try {
             const newMessage = await this.messagesService.createMessage(createMessageDto)
-            const addressee = await this.usersService.findById(createMessageDto.addressee._id)
-            this.server.to(addressee.currentConnectionId).emit('MESSAGE', newMessage as OutputMessageDto)
+            if (createMessageDto.addressee.role !== 'bot') {
+                const addressee = await this.usersService.findById(createMessageDto.addressee._id)
+                this.server.to(addressee.currentConnectionId).emit('MESSAGE', newMessage as OutputMessageDto)
+            }
             return newMessage as OutputMessageDto
+
         } catch (err) {
             this.logger.error(err.message)
         }

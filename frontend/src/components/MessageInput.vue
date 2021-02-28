@@ -44,11 +44,12 @@ export default class MessageInput extends Vue {
 
     public handleInput() {
         if (this.input.trim().length > 0) {
+            const addressee = this.$store.state.Chat.openedChat.user
             this.$socket.emit('NEW_MESSAGE',
-                { owner: this.user, addressee: this.openedChat.user, text: this.input },
+                { owner: this.user, addressee, text: this.input },
                 (message: IMessage) => {
                     this.pushMessage(message)
-                    this.setLastMessage({ ...message, owner: this.openedChat.user })
+                    this.setLastMessage({ ...message, owner: addressee })
                 })
             this.input = ''
         }

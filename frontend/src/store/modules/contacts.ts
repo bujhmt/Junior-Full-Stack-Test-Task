@@ -60,6 +60,6 @@ export default class Contacts extends VuexModule {
 
     @Action({rawError: true})
     public SOCKET_MESSAGE(message: IMessage): void {
-        this.context.commit('_setLastMessage', {...message, owner: {_id: String(message.owner)}})
+        this.context.commit('_setLastMessage', {...message, owner: {_id: message.owner._id ? message.owner._id: String(message.owner)}})
     }
 }

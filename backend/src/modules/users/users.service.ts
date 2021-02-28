@@ -53,4 +53,12 @@ export class UsersService {
         const candidates = await this.userModel.find({}).sort({ isOnline: -1}).sort({lastSeen: -1})
         return candidates.filter((candidate) => candidate._id != userId)
     }
+
+    async deleteBots(): Promise<void> {
+        await this.userModel.deleteMany({role: 'bot'})
+    }
+
+    async findByUsername(username: string): Promise<User> {
+        return (await this.userModel.find({username}))[0]
+    }
 }

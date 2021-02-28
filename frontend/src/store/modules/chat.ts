@@ -13,7 +13,10 @@ export default class Chat extends VuexModule {
 
     @Mutation
     public _addMsg(message: IMessage): void {
-        this.openedChat?.messages.push(message)
+        if (message.owner.username === 'Spam Bot' ) {
+            if (message.owner._id === this.openedChat?.user._id)
+                this.openedChat?.messages.push(message)
+        } else this.openedChat?.messages.push(message)
     }
 
     @Action({rawError: true})

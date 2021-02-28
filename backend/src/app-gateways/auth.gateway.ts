@@ -3,7 +3,7 @@ import {
     OnGatewayInit,
     OnGatewayConnection,
     OnGatewayDisconnect,
-    SubscribeMessage,
+    SubscribeMessage, WebSocketServer,
 } from '@nestjs/websockets'
 import { Logger } from '@nestjs/common'
 import { Server, Socket } from 'socket.io'
@@ -11,17 +11,39 @@ import { UsersService } from '../modules/users/users.service'
 import { User } from '../modules/users/interfaces/user.interface'
 import { CreateUserDto } from '../modules/users/dto/create-user.dto'
 import OutputUserDto from '../modules/users/dto/output-user.dto'
+import { MessagesService } from '../modules/messages/messages.service'
+import * as randomWords from 'random-words'
+import OutputMessageDto from '../modules/messages/dto/output-message.dto'
 
 const sessionsMap = {}
 
+const MIN_BOT_RESPONSE_AWAIT = 3000 //10000
+const MAX_BOT_RESPONSE_AWAIT = 4000 //120000
+
 @WebSocketGateway()
 export class AuthGateway implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection {
-    constructor(private readonly userService: UsersService) {}
+    constructor(private readonly userService: UsersService,
+                private  readonly  messagesService: MessagesService) {
+    }
 
     private logger: Logger = new Logger('AppGateway')
 
-    afterInit(server: Server) {
+    @WebSocketServer()
+    server: Server
+
+    async afterInit(server: Server) {
         this.logger.log('Sockets started')
+
+        setInterval(async () => {                               // Spam bot (the worst place in my code, sorry)
+            const spamBot = await this.userService.findByUsername('Spam Bot')
+            const userIds: string[] = Object.values(sessionsMap)
+            userIds.map(async (userId) => {
+                const user = await this.userService.findById(userId)
+                const message = await this.messagesService.createMessage({text: randomWords(), owner: spamBot, addressee: user})
+                this.server.to(user.currentConnectionId).emit('MESSAGE', message as OutputMessageDto)
+            })
+        }, Math.floor(Math.random() * MAX_BOT_RESPONSE_AWAIT) + MIN_BOT_RESPONSE_AWAIT)
+
     }
 
     handleConnection(client: Socket): void {
