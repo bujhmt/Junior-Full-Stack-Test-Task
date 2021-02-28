@@ -13,18 +13,19 @@ export default class Chat extends VuexModule {
 
     @Mutation
     public _addMsg(message: IMessage): void {
-        if (message.owner.username === 'Spam Bot' ) {
-            if (message.owner._id === this.openedChat?.user._id)
-                this.openedChat?.messages.push(message)
-        } else this.openedChat?.messages.push(message)
+        if (message.owner._id === this.openedChat?.user._id
+            || String(message.addressee) === this.openedChat?.user._id
+            || String(message.owner) === this.openedChat?.user._id
+        )
+            this.openedChat?.messages.push(message)
     }
 
-    @Action({rawError: true})
+    @Action({ rawError: true })
     public setChat(chat: IChat): void {
         this.context.commit('_setChat', chat)
     }
 
-    @Action({rawError: true})
+    @Action({ rawError: true })
     public pushMessage(message: IMessage): void {
         this.context.commit('_addMsg', message)
     }
@@ -33,7 +34,7 @@ export default class Chat extends VuexModule {
         return this.openedChat
     }
 
-    @Action({rawError: true})
+    @Action({ rawError: true })
     public SOCKET_MESSAGE(message: IMessage): void {
         this.context.commit('_addMsg', message)
     }

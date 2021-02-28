@@ -6,6 +6,7 @@ export default interface IMessage {
     text: string
     sent: Date
     owner: IUser
+    addressee?: string
     chat: IChat
     isRead: boolean
 }
