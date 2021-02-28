@@ -4,5 +4,4 @@ import IMessage from '@/interfaces/message'
 export default interface IContact {
     user: IUser,
     lastMsg?: IMessage
-    unreadCount?: number
 }

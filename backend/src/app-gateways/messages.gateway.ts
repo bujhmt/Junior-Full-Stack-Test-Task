@@ -9,10 +9,7 @@ import { User } from '../modules/users/interfaces/user.interface'
 
 @WebSocketGateway()
 export class MessagesGateway {
-    constructor(
-        private readonly messagesService: MessagesService,
-        private readonly usersService: UsersService
-    ) {}
+    constructor(private readonly messagesService: MessagesService, private readonly usersService: UsersService) {}
 
     @WebSocketServer()
     server: Server
@@ -32,7 +29,10 @@ export class MessagesGateway {
     }
 
     @SubscribeMessage('GET_MESSAGES')
-    async getMessages(client: Socket, { owner, addressee }: {owner: User, addressee: User}): Promise<OutputMessageDto[]> {
+    async getMessages(
+        client: Socket,
+        { owner, addressee }: { owner: User; addressee: User },
+    ): Promise<OutputMessageDto[]> {
         try {
             const messages = await this.messagesService.getChatMessages(owner, addressee)
             return messages as OutputMessageDto[]

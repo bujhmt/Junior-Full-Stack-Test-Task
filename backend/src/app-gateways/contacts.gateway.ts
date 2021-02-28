@@ -14,10 +14,7 @@ interface Contact {
 
 @WebSocketGateway()
 export class ContactsGateway {
-    constructor(
-        private readonly userService: UsersService,
-        private readonly messagesService: MessagesService,
-                ) {}
+    constructor(private readonly userService: UsersService, private readonly messagesService: MessagesService) {}
 
     private logger: Logger = new Logger('ContactsGateway')
 
@@ -26,12 +23,15 @@ export class ContactsGateway {
         try {
             const users: User[] = await this.userService.getAllWithoutOwn(payload.userId)
             const owner = await this.userService.findById(payload.userId)
-            return Promise.all(users.map(async (user) => {
-                return {user,
-                    lastMsg: await this.messagesService.getLatest(owner, user),
-                    unreadCount: await this.messagesService.getUnreadCount(owner, user)
-                }
-            }))
+            return Promise.all(
+                users.map(async (user) => {
+                    return {
+                        user,
+                        lastMsg: await this.messagesService.getLatest(owner, user),
+                        unreadCount: await this.messagesService.getUnreadCount(owner, user),
+                    }
+                }),
+            )
         } catch (err) {
             this.logger.error(err.message)
         }

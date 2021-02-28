@@ -28,8 +28,7 @@ export default class Contacts extends VuexModule {
         if (matchedIdx !== -1) {
             Vue.set(this.contacts, matchedIdx, {
                 ...this.contacts[matchedIdx],
-                lastMsg: message,
-                unreadCount: this.contacts[matchedIdx].unreadCount! + 1
+                lastMsg: message
             })
         }
     }
@@ -61,6 +60,6 @@ export default class Contacts extends VuexModule {
 
     @Action({rawError: true})
     public SOCKET_MESSAGE(message: IMessage): void {
-        this.context.commit('_setLastMessage', message)
+        this.context.commit('_setLastMessage', {...message, owner: {_id: String(message.owner)}})
     }
 }

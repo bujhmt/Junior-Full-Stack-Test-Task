@@ -50,7 +50,7 @@ export class UsersService {
     }
 
     async getAllWithoutOwn(userId: string): Promise<User[]> {
-        const candidates = await this.userModel.find({}).sort({ isOnline: 1, lastSeen: -1})
+        const candidates = await this.userModel.find({}).sort({ isOnline: -1}).sort({lastSeen: -1})
         return candidates.filter((candidate) => candidate._id != userId)
     }
 }

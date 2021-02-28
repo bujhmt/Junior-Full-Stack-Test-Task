@@ -19,21 +19,32 @@
                 </div>
             </div>
             <div class="chat-input-wrapper">
-                <ul>
+                <ul class="messages-wrapper" id="scroll" ref="scroll">
                     <li
                         v-for="message in chat.messages"
                         :key="message._id"
+                        :class="String(message.owner) === user._id ? 'message from-me' : 'message to-me'"
                     >
-                        {{ message.text }}
+                        <div class="message-content">
+                            <div
+                                :class="String(message.owner) === user._id ? 'message-info from-me-color' : 'message-info'">
+                                <span> {{ String(message.owner) === user._id ? user.username : openedChat.user.username
+                                    }} </span>
+                                <span> {{ moment(message.sent).format('HH:mm') }}</span>
+                            </div>
+                            <div class="message-text">
+                                {{ message.text }}
+                            </div>
+                        </div>
                     </li>
                 </ul>
-                <div class="send-msg-wrapper">
-                    <MessageInput />
-                    <button>Send Message</button>
-                </div>
+                <MessageInput />
             </div>
         </div>
-        <h2 v-else>Choose chat!</h2>
+        <div v-else class="app-start">
+            <h1>Hi!</h1>
+            <h2>Choose your chat =)</h2>
+        </div>
     </div>
 </template>
 
@@ -44,13 +55,14 @@ import IUser from '@/interfaces/user'
 import IChat from '@/interfaces/chat'
 import { getTimeFromNow } from '@/utils/date'
 import MessageInput from '@/components/MessageInput.vue'
+import moment from 'moment'
 
 const Auth = namespace('Auth')
 const Chat = namespace('Chat')
 
 @Component({
     components: { MessageInput },
-    methods: { getTimeFromNow },
+    methods: { getTimeFromNow, moment },
 })
 export default class ChatModule extends Vue {
     public input: string = ''
@@ -70,6 +82,9 @@ export default class ChatModule extends Vue {
             }
         })
 
+        // const scroll = this.$el.querySelector('#scroll')
+        // if (scroll)
+        //     scroll.scrollIntoView({ behavior: 'smooth' })
     }
 
 }
@@ -112,15 +127,91 @@ export default class ChatModule extends Vue {
     height: 100%;
 }
 
-.send-msg-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin-bottom: 3%;
-}
-
 .guard {
     width: 100%;
     height: calc(100% - 130px);
 }
+
+.messages-wrapper {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - 150px);
+    overflow: hidden;
+    overflow-y: scroll;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+
+    ::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        background: rgba(69, 72, 76, 0.8);
+    }
+
+}
+
+.message {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.message-content {
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.message-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #beccd9;
+    padding: 10px 20px 10px 20px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.message-text {
+    margin-right: 5%;
+    width: 100%;
+    background: #fff;
+    padding: 10px 20px 10px 20px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: 10px 10px 25px rgba(112, 124, 151, 0.05),
+    15px 15px 35px rgba(112, 124, 151, 0.05);
+    word-break: break-all;
+}
+
+.from-me {
+    margin-left: calc(100% - 80% - 60px);
+}
+
+.from-me-color {
+    background: #efcab2;
+}
+
+.app-start {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+}
+
 </style>

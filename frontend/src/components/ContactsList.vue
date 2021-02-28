@@ -107,7 +107,30 @@ export default class ContactsList extends Vue {
     list-style-type: none;
     justify-content: flex-start;
     padding: 0;
-    margin: 0;
+    margin-bottom: 5%;
+
+    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    ::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        background: rgba(69, 72, 76, 0.8);
+    }
 }
 
 .contact {
@@ -147,6 +170,9 @@ export default class ContactsList extends Vue {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: calc(100% - 130px);
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .find-list-wrapper {

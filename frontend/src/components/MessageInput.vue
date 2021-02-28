@@ -6,6 +6,12 @@
             placeholder="Type here..."
             @keypress.enter.prevent="handleInput"
         >
+        <button
+            @click="handleInput"
+            class="submit-button"
+        >
+            Send Message
+        </button>
     </div>
 </template>
 
@@ -42,7 +48,7 @@ export default class MessageInput extends Vue {
                 { owner: this.user, addressee: this.openedChat.user, text: this.input },
                 (message: IMessage) => {
                     this.pushMessage(message)
-                    this.setLastMessage({...message, owner: this.openedChat.user})
+                    this.setLastMessage({ ...message, owner: this.openedChat.user })
                 })
             this.input = ''
         }
@@ -53,12 +59,31 @@ export default class MessageInput extends Vue {
 
 <style scoped lang="scss">
 .input-wrapper {
-    width: 65%;
-    margin-right: 3%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 3%;
 }
 
 .input {
-    width: 100%;
+    width: 65%;
+    margin-right: 3%;
+    height: 50px;
+}
+
+.submit-button {
+    background: #418bca;
+    color: #fff;
+    border: none;
+    box-shadow: none;
+    border-radius: 15px;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 
 </style>

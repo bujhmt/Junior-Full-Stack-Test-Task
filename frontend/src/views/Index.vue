@@ -2,12 +2,6 @@
     <div class="main">
         <ChatModule />
         <ContactsList />
-        <!--            <SearchInput />-->
-        <!--        </div>-->
-        <!--        <div>-->
-        <!--            <ChatModule />-->
-        <!--            <MessageInput/>-->
-        <!--        </div>-->
     </div>
 </template>
 
