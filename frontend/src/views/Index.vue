@@ -1,14 +1,17 @@
 <template>
     <div class="main">
-        <div>
+        <div class="chat">
+            <ChatModule/>
+        </div>
+        <div class="list">
             <ContactsList />
-            <SearchInput />
         </div>
-        <div>
-            <Chat v-if="isChatOpen"/>
-            <h1 v-else>Hi!</h1>
-            <MessageInput/>
-        </div>
+<!--            <SearchInput />-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <ChatModule />-->
+<!--            <MessageInput/>-->
+<!--        </div>-->
     </div>
 </template>
 
@@ -21,12 +24,10 @@ import { first } from 'random-name'
 import IContact from '@/interfaces/contact'
 import SearchInput from '@/components/SearchInput.vue'
 import MessageInput from '@/components/MessageInput.vue'
-import IChat from '@/interfaces/chat'
 import ChatModule from '@/components/ChatModule.vue'
 
 const Auth = namespace('Auth')
 const Contacts = namespace('Contacts')
-const Chat = namespace('Chat')
 const storageName = process.env.VUE_APP_STORAGE_NAME || 'token'
 
 @Component({
@@ -43,9 +44,6 @@ export default class Index extends Vue {
 
     @Contacts.Action
     public setContacts!: (_contacts: IContact[]) => void
-
-    @Chat.Getter
-    public currentChat!: IChat
 
     public getLocalStorageData() {
         return JSON.parse(String(localStorage.getItem(storageName)))
@@ -69,10 +67,6 @@ export default class Index extends Vue {
         })
     }
 
-    get isChatOpen() {
-        return this.currentChat && this.currentChat.user
-    }
-
     mounted() {
         const data = this.getLocalStorageData()
         if (!data || !data.token) {                                                              // user don't have jwt token => signUp => login
@@ -90,5 +84,13 @@ export default class Index extends Vue {
 <style scoped lang="scss">
 .main {
     display: flex;
+    margin: 5% 10% 5% 10%;
+    min-height: 90%;
+    min-width: 80%;
 }
+
+.list {
+
+}
+
 </style>

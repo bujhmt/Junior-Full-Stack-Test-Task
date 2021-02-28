@@ -17,6 +17,7 @@ import IMessage from '@/interfaces/message'
 
 const Auth = namespace('Auth')
 const Chat = namespace('Chat')
+const Contacts = namespace('Contacts')
 
 @Component
 export default class MessageInput extends Vue {
@@ -31,12 +32,16 @@ export default class MessageInput extends Vue {
     @Chat.Action
     public pushMessage!: (message: IMessage) => void
 
+    @Contacts.Action
+    public setLastMessage!: (message: IMessage) => void
+
     public handleInput() {
         if (this.input.trim().length > 0) {
             this.$socket.emit('NEW_MESSAGE',
                 { owner: this.user, addressee: this.openedChat.user, text: this.input },
                 (message: IMessage) => {
                     this.pushMessage(message)
+                    this.setLastMessage({...message, owner: this.openedChat.user})
                 })
             this.input = ''
         }

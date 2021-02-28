@@ -14,7 +14,6 @@ export default class Chat extends VuexModule {
     @Mutation
     public _addMsg(message: IMessage): void {
         this.openedChat?.messages.push(message)
-        //Vue.set(this.openedChat, 'messages', {...this.openedChat, messages: this.})
     }
 
     @Action({rawError: true})
@@ -29,5 +28,10 @@ export default class Chat extends VuexModule {
 
     get currentChat() {
         return this.openedChat
+    }
+
+    @Action({rawError: true})
+    public SOCKET_MESSAGE(message: IMessage): void {
+        this.context.commit('_addMsg', message)
     }
 }

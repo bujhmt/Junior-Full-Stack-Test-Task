@@ -6,6 +6,8 @@ import store from './store'
 import VueSocketIO from 'vue-socket.io'
 import { SOCKET_PREFIX } from '@/constans'
 
+import "@/assets/global.css"
+
 Vue.config.productionTip = false
 
 console.log('Base url:', process.env.VUE_APP_BASE_URL)

@@ -45,6 +45,11 @@ export default class Contacts extends VuexModule {
     }
 
     @Action({rawError: true})
+    public setLastMessage(message: IMessage): void {
+        this.context.commit('_setLastMessage', message)
+    }
+
+    @Action({rawError: true})
     public SOCKET_CONTACT_LOGIN(newContact: IContact) {
         this.context.commit('_addOrUpdateContact', newContact)
     }
@@ -56,7 +61,6 @@ export default class Contacts extends VuexModule {
 
     @Action({rawError: true})
     public SOCKET_MESSAGE(message: IMessage): void {
-        console.log('MESSAGE contacts store', message)
         this.context.commit('_setLastMessage', message)
     }
 }

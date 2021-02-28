@@ -37,6 +37,7 @@ export class MessagesGateway {
             const messages = await this.messagesService.getChatMessages(owner, addressee)
             return messages as OutputMessageDto[]
         } catch (err) {
+            console.log(err)
             this.logger.error(err.message)
         }
     }
